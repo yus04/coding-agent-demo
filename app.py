@@ -12,6 +12,8 @@ def initialize_session_state():
     """セッション状態を初期化"""
     if 'todos' not in st.session_state:
         st.session_state.todos = []
+    if 'form_key' not in st.session_state:
+        st.session_state.form_key = 0
 
 def add_todo(todo_text):
     """TODO項目を追加"""
@@ -41,15 +43,15 @@ def main():
     st.header("新しい TODO を追加")
     
     # 入力フォーム
-    with st.form("add_todo_form"):
-        new_todo = st.text_input("TODO項目を入力してください", placeholder="例: 買い物に行く", key="new_todo_input")
+    with st.form(f"add_todo_form_{st.session_state.form_key}"):
+        new_todo = st.text_input("TODO項目を入力してください", placeholder="例: 買い物に行く")
         submitted = st.form_submit_button("追加")
         
         if submitted and new_todo:
             add_todo(new_todo)
             st.success(f"「{new_todo}」を追加しました！")
-            # 入力フィールドをクリア
-            st.session_state.new_todo_input = ""
+            # フォームをリセットするためにキーを変更
+            st.session_state.form_key += 1
             st.rerun()
     
     # TODO表示セクション
