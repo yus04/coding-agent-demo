@@ -29,3 +29,9 @@ streamlit run app.py
 - **フレームワーク**: Python + Streamlit
 - **データ保存**: インメモリ（アプリ起動中のみ有効）
 - **対応ブラウザ**: モダンブラウザ全般
+
+## 📖 Azure App Service 研究資料
+
+このリポジトリには、Azure App Service の特徴と機能に関する包括的な調査資料も含まれています：
+
+- [Azure App Service の調査と整理](./Azure-App-Service-Research.md) - Microsoft Learn 公式ドキュメントに基づく詳細な機能・特徴の整理
