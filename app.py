@@ -42,12 +42,14 @@ def main():
     
     # 入力フォーム
     with st.form("add_todo_form"):
-        new_todo = st.text_input("TODO項目を入力してください", placeholder="例: 買い物に行く")
+        new_todo = st.text_input("TODO項目を入力してください", placeholder="例: 買い物に行く", key="new_todo_input")
         submitted = st.form_submit_button("追加")
         
         if submitted and new_todo:
             add_todo(new_todo)
             st.success(f"「{new_todo}」を追加しました！")
+            # 入力フィールドをクリア
+            st.session_state.new_todo_input = ""
             st.rerun()
     
     # TODO表示セクション
