@@ -29,3 +29,7 @@ streamlit run app.py
 - **フレームワーク**: Python + Streamlit
 - **データ保存**: インメモリ（アプリ起動中のみ有効）
 - **対応ブラウザ**: モダンブラウザ全般
+
+## 📚 ドキュメント
+
+- [Azure コンテナデプロイメント手段の調査](azure-container-deployment-research.md) - Azure でのコンテナデプロイメント手段に関する詳細な調査結果
