@@ -12,6 +12,95 @@ def initialize_session_state():
     """セッション状態を初期化"""
     if 'todos' not in st.session_state:
         st.session_state.todos = []
+    if 'theme_mode' not in st.session_state:
+        st.session_state.theme_mode = 'light'  # デフォルトはライトモード
+
+def apply_theme_css():
+    """テーマに応じたCSSを適用"""
+    if st.session_state.theme_mode == 'dark':
+        dark_css = """
+        <style>
+        .stApp {
+            background-color: #0e1117;
+            color: #fafafa;
+        }
+        .stTextInput > div > div > input {
+            background-color: #262730;
+            color: #fafafa;
+            border: 1px solid #565656;
+        }
+        .stButton > button {
+            background-color: #262730;
+            color: #fafafa;
+            border: 1px solid #565656;
+        }
+        .stButton > button:hover {
+            background-color: #565656;
+            border: 1px solid #fafafa;
+        }
+        .stAlert > div {
+            background-color: #1e2328;
+            color: #fafafa;
+            border: 1px solid #565656;
+        }
+        .stSuccess > div {
+            background-color: #0e4429;
+            color: #7ce38b;
+        }
+        .element-container div[data-testid="stMarkdownContainer"] p {
+            color: #fafafa;
+        }
+        h1, h2, h3 {
+            color: #fafafa !important;
+        }
+        </style>
+        """
+        st.markdown(dark_css, unsafe_allow_html=True)
+    else:
+        light_css = """
+        <style>
+        .stApp {
+            background-color: #ffffff;
+            color: #262730;
+        }
+        .stTextInput > div > div > input {
+            background-color: #ffffff;
+            color: #262730;
+            border: 1px solid #cccccc;
+        }
+        .stButton > button {
+            background-color: #ffffff;
+            color: #262730;
+            border: 1px solid #cccccc;
+        }
+        .stButton > button:hover {
+            background-color: #f0f2f6;
+            border: 1px solid #262730;
+        }
+        </style>
+        """
+        st.markdown(light_css, unsafe_allow_html=True)
+
+def toggle_theme():
+    """テーマを切り替える"""
+    if st.session_state.theme_mode == 'light':
+        st.session_state.theme_mode = 'dark'
+    else:
+        st.session_state.theme_mode = 'light'
+    st.rerun()
+
+def render_theme_toggle():
+    """画面右上にテーマ切り替えスイッチを表示"""
+    # 右上にテーマ切り替えボタンを配置
+    col1, col2, col3 = st.columns([6, 1, 1])
+    
+    with col3:
+        if st.session_state.theme_mode == 'light':
+            if st.button("🌙", key="theme_toggle", help="ダークモードに切り替え"):
+                toggle_theme()
+        else:
+            if st.button("☀️", key="theme_toggle", help="ライトモードに切り替え"):
+                toggle_theme()
 
 def add_todo(todo_text):
     """TODO項目を追加"""
@@ -31,11 +120,17 @@ def delete_todo(todo_id):
 
 def main():
     """メインアプリケーション"""
-    st.title("📝 TODO リスト")
-    st.write("シンプルな TODO 管理アプリケーション")
-    
     # セッション状態を初期化
     initialize_session_state()
+    
+    # テーマCSSを適用
+    apply_theme_css()
+    
+    # テーマ切り替えスイッチを右上に表示
+    render_theme_toggle()
+    
+    st.title("📝 TODO リスト")
+    st.write("シンプルな TODO 管理アプリケーション")
     
     # TODO追加セクション
     st.header("新しい TODO を追加")
