@@ -8,17 +8,25 @@ streamlit run app.py
 
 import streamlit as st
 
+PRIORITIES = ["高 (High)", "中 (Medium)", "低 (Low)"]
+PRIORITY_ORDER = {
+    "高 (High)": 0,
+    "中 (Medium)": 1,
+    "低 (Low)": 2,
+}
+
 def initialize_session_state():
     """セッション状態を初期化"""
     if 'todos' not in st.session_state:
         st.session_state.todos = []
 
-def add_todo(todo_text):
+def add_todo(todo_text, priority):
     """TODO項目を追加"""
     if todo_text.strip():
         st.session_state.todos.append({
             'id': len(st.session_state.todos),
             'text': todo_text.strip(),
+            'priority': priority,
             'completed': False
         })
 
@@ -43,11 +51,12 @@ def main():
     # 入力フォーム
     with st.form("add_todo_form"):
         new_todo = st.text_input("TODO項目を入力してください", placeholder="例: 買い物に行く")
+        priority = st.selectbox("優先度を選択してください", PRIORITIES, index=1)
         submitted = st.form_submit_button("追加")
         
         if submitted and new_todo:
-            add_todo(new_todo)
-            st.success(f"「{new_todo}」を追加しました！")
+            add_todo(new_todo, priority)
+            st.success(f"「{new_todo}」（優先度: {priority}）を追加しました！")
             st.rerun()
     
     # TODO表示セクション
@@ -57,7 +66,10 @@ def main():
         st.info("TODO項目がありません。上記から新しい項目を追加してください。")
     else:
         # 未完了のTODOを表示
-        incomplete_todos = [todo for todo in st.session_state.todos if not todo['completed']]
+        incomplete_todos = sorted(
+            [todo for todo in st.session_state.todos if not todo['completed']],
+            key=lambda todo: PRIORITY_ORDER.get(todo.get('priority'), len(PRIORITY_ORDER))
+        )
         
         if incomplete_todos:
             st.subheader(f"未完了 ({len(incomplete_todos)}件)")
@@ -66,7 +78,7 @@ def main():
                 col1, col2 = st.columns([4, 1])
                 
                 with col1:
-                    st.write(f"• {todo['text']}")
+                    st.write(f"• **[{todo.get('priority', '中 (Medium)')}]** {todo['text']}")
                 
                 with col2:
                     if st.button("完了", key=f"complete_{todo['id']}"):
