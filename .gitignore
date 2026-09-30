@@ -37,3 +37,12 @@ Thumbs.db
 
 # Streamlit
 .streamlit/
+
+# Azure deployment
+deployment.zip
+*.log
+.azure/
+
+# Temporary files
+/tmp/
+temp/
