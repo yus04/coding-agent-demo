@@ -19,6 +19,8 @@ def initialize_session_state():
     """セッション状態を初期化"""
     if 'todos' not in st.session_state:
         st.session_state.todos = []
+    if 'form_key' not in st.session_state:
+        st.session_state.form_key = 0
 
 def add_todo(todo_text, priority="Medium"):
     """TODO項目を追加"""
@@ -49,7 +51,7 @@ def main():
     st.header("新しい TODO を追加")
     
     # 入力フォーム
-    with st.form("add_todo_form"):
+    with st.form(f"add_todo_form_{st.session_state.form_key}"):
         new_todo = st.text_input("TODO項目を入力してください", placeholder="例: 買い物に行く")
         priority = st.selectbox(
             "優先度",
@@ -62,6 +64,8 @@ def main():
         if submitted and new_todo:
             add_todo(new_todo, priority)
             st.success(f"「{new_todo}」を追加しました！")
+            # フォームをリセットするためにキーを変更
+            st.session_state.form_key += 1
             st.rerun()
     
     # TODO表示セクション
