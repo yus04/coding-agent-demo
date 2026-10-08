@@ -66,12 +66,22 @@ def main():
     
     # TODO表示セクション
     st.header("TODO リスト")
+    search_query = st.text_input(
+        "TODOを検索",
+        placeholder="キーワードを入力",
+        key="todo_search",
+    )
     
     if not st.session_state.todos:
         st.info("TODO項目がありません。上記から新しい項目を追加してください。")
     else:
         # 未完了のTODOを表示
         incomplete_todos = [todo for todo in st.session_state.todos if not todo['completed']]
+        if search_query:
+            incomplete_todos = [
+                todo for todo in incomplete_todos
+                if search_query.casefold() in todo['text'].casefold()
+            ]
         incomplete_todos.sort(
             key=lambda todo: PRIORITIES.index(todo.get('priority', 'Medium'))
         )
@@ -91,6 +101,8 @@ def main():
                         delete_todo(todo['id'])
                         st.success("TODO項目を完了しました！")
                         st.rerun()
+        else:
+            st.info("該当するTODOがありません。")
         
         # 統計情報
         total_todos = len(st.session_state.todos)
